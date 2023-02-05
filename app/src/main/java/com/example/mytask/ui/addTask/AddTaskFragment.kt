@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mytask.DatePickerFragment
@@ -33,15 +31,18 @@ class AddTaskFragment : Fragment() {
             ViewModelProvider(this,viewModelFactory).get(AddTaskViewModel::class.java)
         val binding: FragmentAddTaskBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_task,container,false)
         binding.addTaskViewModel = addTaskViewModel
-
-        binding.datePickerButton.setOnClickListener(){
-            showDatePickerDialog(binding.root)
+        binding.editTextDate.isFocusable = false
+        binding.editTextDate.setOnClickListener(){
+            showDatePickerDialog()
         }
-//        addTaskViewModel.
+        binding.editTextDate2.isFocusable = false
+        binding.editTextDate2.setOnClickListener(){
+            showDatePickerDialog()
+        }
         return binding.root
     }
 
-    fun showDatePickerDialog(v: View) {
+    fun showDatePickerDialog() {
         val newFragment = DatePickerFragment()
         activity?.let { newFragment.show(it.supportFragmentManager, "datePicker") }
     }
