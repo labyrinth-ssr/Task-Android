@@ -5,7 +5,7 @@
     <data>
         <variable
             name="addTaskViewModel"
-            type="com.example.mytask.ui.addTask.AddTaskViewModel" />
+            type="com.example.mytask.ui.addTask.AddTaskViewModel"/>
     </data>
     <ScrollView
         android:layout_width="match_parent"
@@ -21,6 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/task_name"
+                android:text="@{addTaskViewModel.taskName}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -39,18 +40,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/editTextDate"
                 app:srcCompat="@drawable/ic_baseline_add_alarm_24" />
-
-
-            <!--            <Button-->
-<!--                android:id="@+id/date_picker_button"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="16dp"-->
-<!--                android:text="@string/pick_date"-->
-<!--                app:layout_constraintBottom_toBottomOf="@+id/icon_start_time"-->
-<!--                app:layout_constraintStart_toEndOf="@+id/icon_start_time"-->
-<!--                app:layout_constraintTop_toTopOf="@+id/icon_start_time"-->
-<!--                tools:ignore="UsingOnClickInXml" />-->
 
             <EditText
                 android:id="@+id/editTextDate"
@@ -117,33 +106,24 @@
                     android:id="@+id/prio_low"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:buttonTint="#03A9F4"
                     android:onClick="@{()-> addTaskViewModel.onSetPriority(0)}"/>
 
                 <RadioButton
                     android:id="@+id/prio_medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:buttonTint="#FFD740"
                     android:onClick="@{()-> addTaskViewModel.onSetPriority(1)}"/>
 
                 <RadioButton
                     android:id="@+id/prio_high"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:buttonTint="#F4511E"
                     android:onClick="@{()-> addTaskViewModel.onSetPriority(2)}"/>
 
             </RadioGroup>
-
-
-<!--            <com.google.android.material.switchmaterial.SwitchMaterial-->
-<!--                android:id="@+id/round_up_switch"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:checked="true"-->
-<!--                android:text="@string/placeholder"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="@id/service_question"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/service_question" />-->
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

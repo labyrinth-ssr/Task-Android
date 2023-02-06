@@ -15,6 +15,7 @@ class AddTaskViewModel(
     private val taskKey: Long = 0L,
     val database: TaskDatabaseDao) : ViewModel() {
 
+    lateinit var taskName:String
     fun onSetPriority(priority:Int) {
 
         viewModelScope.launch {
@@ -26,6 +27,4 @@ class AddTaskViewModel(
             database.update(task)
         }
     }
-
-
 }

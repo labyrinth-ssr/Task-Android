@@ -13,8 +13,6 @@ import com.example.mytask.database.TaskDatabase
 import com.example.mytask.databinding.FragmentAddTaskBinding
 
 class AddTaskFragment : Fragment() {
-
-
     // This property is only valid between onCreateView and
     // onDestroyView.
 
@@ -44,7 +42,7 @@ class AddTaskFragment : Fragment() {
 
     fun showDatePickerDialog() {
         val newFragment = DatePickerFragment()
-        activity?.let { newFragment.show(it.supportFragmentManager, "datePicker") }
+        newFragment.show(parentFragmentManager,"datePicker")
     }
 
     override fun onDestroyView() {
