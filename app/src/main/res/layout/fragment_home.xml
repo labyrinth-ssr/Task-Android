@@ -33,6 +33,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@android:drawable/ic_dialog_email"
-            android:onClick="@{() -> homeViewModel.onAddTask()}" />
+            android:onClick="@{() -> homeViewModel.navigateToAddTask()}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -21,6 +21,7 @@ class HomeViewModel (
     private var todayTask = MutableLiveData<Task?>()
     private val _navigateToAddTask = MutableLiveData<Task?>()
 
+
     val navigateToAddTask: MutableLiveData<Task?>
         get() = _navigateToAddTask
 
@@ -41,22 +42,25 @@ class HomeViewModel (
         var task = database.getDueTodayTask()
         return task;
     }
-    fun onAddTask(){
-//        Log.i(TAG, "onAddTask: tasks:"+ (tasks.value?.get(0)?.taskName ?: ""))
-        viewModelScope.launch {
-            val newTask = Task()
-            insert(newTask)
-            todayTask.value = getTodayTaskFromDatabase()
 
-            _navigateToAddTask.value = newTask
-
-        }
-        Log.i(TAG, "onAddTask:"+ tasksString.value)
-
+    fun navigateToAddTask(){
+        val newTask = Task()
+        _navigateToAddTask.value = newTask
     }
 
-    private suspend fun insert(newTask: Task) {
-        database.insert(newTask)
-    }
+//    fun onAddTask(){
+////        Log.i(TAG, "onAddTask: tasks:"+ (tasks.value?.get(0)?.taskName ?: ""))
+//        viewModelScope.launch {
+//            val newTask = Task()
+//            insert(newTask)
+//            todayTask.value = getTodayTaskFromDatabase()
+//            _navigateToAddTask.value = newTask
+//        }
+//        Log.i(TAG, "onAddTask:"+ tasksString.value)
+//    }
+//
+//    private suspend fun insert(newTask: Task) {
+//        database.insert(newTask)
+//    }
 
 }

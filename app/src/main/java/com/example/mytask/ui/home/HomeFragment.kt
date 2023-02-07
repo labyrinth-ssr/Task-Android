@@ -1,6 +1,8 @@
 package com.example.mytask.ui.home
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +46,7 @@ class HomeFragment : Fragment() {
                     HomeFragmentDirections.actionNavHomeToAddTask(task.taskId)
                 )
                 homeViewModel.doneNavigating()
+                Log.i(TAG, "onCreateView: task id"+task.taskId)
             }
         })
         binding.lifecycleOwner = this

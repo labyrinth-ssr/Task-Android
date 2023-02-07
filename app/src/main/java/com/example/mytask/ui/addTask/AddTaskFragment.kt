@@ -1,10 +1,14 @@
 package com.example.mytask.ui.addTask
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.adapters.TextViewBindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mytask.DatePickerFragment
@@ -37,6 +41,26 @@ class AddTaskFragment : Fragment() {
         binding.editTextDate2.setOnClickListener(){
             showDatePickerDialog()
         }
+
+        val taskName = binding.taskName.editText
+
+        taskName?.addTextChangedListener(
+            onTextChanged = {_, _, _, _ ->
+                addTaskViewModel.setTaskName(taskName.text.toString().trim { it <= ' ' })
+//                addTaskViewModel.getTask().taskName = taskName.text.toString().trim { it <= ' ' }
+//                Log.i(TAG, "onCreateView: task name "+ addTaskViewModel.getTask().taskName)
+            }
+    //                ,
+    //                afterTextChanged = {
+    //                    textWatcher?.invoke(it)
+    //                }
+        )
+        val saveButton = binding.imageButton
+        saveButton.setOnClickListener {
+
+        }
+//        taskName?.setText(addTaskViewModel.taskName)
+
         return binding.root
     }
 
