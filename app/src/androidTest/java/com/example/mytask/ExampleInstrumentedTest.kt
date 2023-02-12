@@ -1,6 +1,5 @@
 package com.example.mytask
 
-import androidx.room.Dao
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

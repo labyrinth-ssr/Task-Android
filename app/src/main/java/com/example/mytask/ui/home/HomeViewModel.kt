@@ -13,9 +13,9 @@ class HomeViewModel (
     val database: TaskDatabaseDao,
     application: Application
         ):AndroidViewModel(application){
-    val tasks = database.getAllTasks()
+    var tasks = database.getAllTasks()
     val tasksString = Transformations.map(tasks) {tasks->
-        formatTasks(tasks,application.resources)
+        formatTasks(tasks)
     }
 
     private var todayTask = MutableLiveData<Task?>()
@@ -31,6 +31,13 @@ class HomeViewModel (
 
     init {
         initializeTodayTask()
+        tasks = database.getAllTasks()
+        database.getAllTasks().map { it ->
+            it.forEach{
+                Log.i(TAG, "it: "+it.taskName)
+            }
+            Log.i(TAG, "for test: ")
+        }
     }
 
     private fun initializeTodayTask() {
@@ -46,6 +53,10 @@ class HomeViewModel (
     fun navigateToAddTask(){
         val newTask = Task()
         _navigateToAddTask.value = newTask
+    }
+
+    fun onTaskClicked(task: Task){
+        _navigateToAddTask.value = task
     }
 
 //    fun onAddTask(){

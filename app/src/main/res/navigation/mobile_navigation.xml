@@ -26,6 +26,9 @@
         <argument
             android:name="taskKey"
             app:argType="long"/>
+        <action
+            android:id="@+id/action_add_task_to_nav_home"
+            app:destination="@id/nav_home" />
     </fragment>
 
     <fragment

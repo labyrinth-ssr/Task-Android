@@ -22,7 +22,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/task_name"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@={addTaskViewModel.task.taskName}">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/task_name_edit_text"
@@ -49,7 +50,8 @@
                 android:hint="@string/start_date_hint"
                 app:layout_constraintEnd_toEndOf="@+id/task_name"
                 app:layout_constraintStart_toEndOf="@+id/icon_start_time"
-                app:layout_constraintTop_toBottomOf="@+id/task_name" />
+                app:layout_constraintTop_toBottomOf="@+id/task_name"
+                dueTimeFormatted=""/>
 
             <ImageView
                 android:id="@+id/icon_service_question"

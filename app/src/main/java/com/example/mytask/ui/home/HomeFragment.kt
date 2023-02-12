@@ -6,16 +6,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mytask.R
 import com.example.mytask.database.TaskDatabase
 import com.example.mytask.databinding.FragmentHomeBinding
+import com.example.mytask.tasksToNodes
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(){
 
     /**
      * 和view进行数据绑定
@@ -26,18 +30,29 @@ class HomeFragment : Fragment() {
      * @return
      */
 
+    private lateinit var adapter: TaskAdapter
+//    private val mNodeList: MutableList<Node> = ArrayList<Node>()
+    lateinit var binding:FragmentHomeBinding
+    lateinit var homeViewModel: HomeViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val adapter = TaskAdapter()
-        val binding:FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false)
+        binding= DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false)
         val application = requireNotNull(this.activity).application
         val dataSource = TaskDatabase.getInstance(application).taskDatabaseDao
         val viewModelFactory = HomeViewModelFactory(dataSource, application)
-        val homeViewModel =
-            ViewModelProvider(this,viewModelFactory).get(HomeViewModel::class.java)
+        homeViewModel =
+            ViewModelProvider(this,viewModelFactory)[HomeViewModel::class.java]
+        binding.lifecycleOwner = this
+        binding.homeViewModel = homeViewModel
+        adapter = TaskAdapter(TaskListener { task ->
+            homeViewModel.onTaskClicked(task)
+        })
+        binding.taskList.layoutManager = LinearLayoutManager(activity)
+        binding.taskList.adapter = adapter
 
         homeViewModel.navigateToAddTask.observe(viewLifecycleOwner, Observer {
             task->
@@ -46,22 +61,46 @@ class HomeFragment : Fragment() {
                     HomeFragmentDirections.actionNavHomeToAddTask(task.taskId)
                 )
                 homeViewModel.doneNavigating()
-                Log.i(TAG, "onCreateView: task id"+task.taskId)
+                Log.i(TAG, "onCreateView:navigate task id"+task.taskId)
             }
         })
-        binding.lifecycleOwner = this
-        binding.homeViewModel = homeViewModel
-        binding.taskList.adapter = adapter
+
         homeViewModel.tasks.observe(viewLifecycleOwner, Observer {
             it?.let {
-                adapter.data = it
+                adapter.mAllNodes = TreeHelper.getSortedNodes(tasksToNodes(it))
+                adapter.mNodes = TreeHelper.filterVisibleNode(adapter.mAllNodes)
+                adapter.submitList(adapter.mNodes)
             }
+            Log.i(TAG, "onCreateView: observe item change")
         })
+//        initRecyclerView()
         return binding.root
     }
+
+//    private fun initRecyclerView() {
+////        mNodeList.clear()
+////        homeViewModel.tasks.value?.forEach {
+////            mNodeList.add(Node(it))
+////        }
+////        if (homeViewModel.tasks.value==null){
+////            Log.i(TAG, "initRecyclerView: task null")
+////        }
+//
+////        adapter.setOnTreeNodeClickListener(this)
+////        binding.taskList.layoutManager = LinearLayoutManager(activity)
+////        binding.taskList.adapter = adapter
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
 //        binding = null
     }
+
+//    override fun onTreeItemClick(node: Node, position: Int) {
+//        if (node.isLeaf) {
+//            Toast.makeText(
+//                activity?.applicationContext, node.name,
+//                Toast.LENGTH_SHORT).show()
+//        }
+//    }
 }

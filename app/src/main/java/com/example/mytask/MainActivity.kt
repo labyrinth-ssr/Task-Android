@@ -12,7 +12,11 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.mytask.database.TaskDatabase
 import com.example.mytask.databinding.ActivityMainBinding
+import com.example.mytask.ui.addTask.AddTaskViewModel
+import com.example.mytask.ui.addTask.AddTaskViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 

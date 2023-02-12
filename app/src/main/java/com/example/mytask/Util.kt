@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytask.database.Task
+import com.example.mytask.ui.home.Node
+import java.text.ParsePosition
 import java.text.SimpleDateFormat
 
 /**
@@ -22,7 +24,7 @@ import java.text.SimpleDateFormat
  */
 @SuppressLint("SimpleDateFormat")
 fun convertLongToDateString(systemTime: Long): String {
-    return SimpleDateFormat("EEEE MMM-dd-yyyy' Time: 'HH:mm")
+    return SimpleDateFormat("yyyy-MM-dd HH:mm")
         .format(systemTime).toString()
 }
 
@@ -31,26 +33,55 @@ fun convertLongToDateString(systemTime: Long): String {
  * Takes a list of SleepNights and converts and formats it into one string for display.
  *
  * @param tasks
- * @param resources
  * @return
  */
-fun formatTasks(tasks: List<Task>, resources: Resources): String {
+fun formatTasks(tasks: List<Task>): String {
     val sb = StringBuilder()
     sb.apply {
         tasks.forEach {
             append(it.taskName)
             append("\t${it.priority}")
-            append("\t${convertLongToDateString(it.startTimeMilli)}")
+            append("\t${convertLongToDateString(it.startTimeStamp)}")
             append("\n")
         }
     }
     Log.i(TAG, "formatTasks: $sb")
     return sb.toString()
-//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//        return Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_LEGACY)
-//    } else {
-//        return HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)
-//    }
+}
+
+fun formatTask(task: Task): String {
+    val sb = StringBuilder()
+    sb.apply {
+            append(task.taskName)
+            append("\t${task.priority}")
+            append("\t${convertLongToDateString(task.startTimeStamp)}")
+            append("\n")
+    }
+    Log.i(TAG, "formatTask: $sb")
+    return sb.toString()
+}
+
+fun dateStr2timeStamp(dateStr : String) : Long{
+    val pattern = "yyyy-MM-dd"
+    val simpleDateFormat = SimpleDateFormat(pattern)
+    val date = simpleDateFormat.parse(dateStr)
+    val timeStamp = date.time
+    return timeStamp
+}
+
+fun transToString(time:Long):String{
+    return SimpleDateFormat("yy-MM-DD-hh-mm-ss").format(time)
+}
+fun transToTimeStamp(date:String):Long{
+    return SimpleDateFormat("yy-MM-DD-hh-mm-ss").parse(date, ParsePosition(0)).time
+}
+
+fun tasksToNodes(tasks: List<Task>):MutableList<Node> {
+    val nodes:MutableList<Node> = mutableListOf()
+    tasks.forEach {
+        nodes.add(Node(it))
+    }
+    return nodes
 }
 
 class TextItemViewHolder(val textView: TextView): RecyclerView.ViewHolder(textView)

@@ -8,12 +8,14 @@ import androidx.room.PrimaryKey
 data class Task(
     @PrimaryKey(autoGenerate = true)
     var taskId: Long = 0L,
+    @ColumnInfo(name = "parent_task_id")
+    var parentTaskId: Long = 0L,
     @ColumnInfo(name = "task_name")
     var taskName: String = "new",
     @ColumnInfo(name = "start_time_milli")
-    val startTimeMilli: Long = System.currentTimeMillis(),
+    var startTimeStamp: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "end_time_milli")
-    var dueTimeMilli: Long = startTimeMilli,
+    var dueTimeStamp: Long = startTimeStamp,
     @ColumnInfo(name = "priority")
     var priority:Int = 2
 )

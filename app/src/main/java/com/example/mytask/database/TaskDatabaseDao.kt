@@ -20,4 +20,6 @@ interface TaskDatabaseDao {
     suspend fun getDueTodayTask(): Task?
     @Query("SELECT * FROM task_table ORDER BY taskId DESC")
     fun getAllTasks(): LiveData<List<Task>>
+    @Query("SELECT * from task_table WHERE taskId = :key")
+    fun getTaskWithId(key: Long): LiveData<Task>
 }
