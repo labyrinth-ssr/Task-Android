@@ -1,5 +1,9 @@
 package com.example.mytask.ui.home;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.example.mytask.database.Task;
 
 import java.util.ArrayList;
@@ -35,6 +39,8 @@ public class Node {
 
     public Node() {
     }
+
+
 
     public Node(Task task) {
         super();
@@ -112,6 +118,14 @@ public class Node {
 
     public void setChildrenNodes(List<Node> childrenNodes) {
         this.childrenNodes = childrenNodes;
+    }
+
+    static public Node getNodeById(List<Node> nodeList, Long id){
+        for (Node node:nodeList){
+            if (node.getId() == id)
+                return node;
+        }
+        return null;
     }
 
     public Node getParent() {

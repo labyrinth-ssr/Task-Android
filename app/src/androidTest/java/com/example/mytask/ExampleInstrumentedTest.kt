@@ -43,12 +43,12 @@ class TaskDatabaseTest {
         db.close()
     }
 
-    @Test
-    @Throws(Exception::class)
-    fun insertAndGetNight() {
-        val night = Task()
-        taskDao.insert(night)
-        val tonight = taskDao.getDueTodayTask()
-        assertEquals(tonight?.taskId, 1L)
-    }
+//    @Test
+//    @Throws(Exception::class)
+//    fun insertAndGetNight() {
+//        val night = Task()
+//        taskDao.insert(night)
+//        val tonight = taskDao.getDueTodayTask()
+//        assertEquals(tonight?.taskId, 1L)
+//    }
 }

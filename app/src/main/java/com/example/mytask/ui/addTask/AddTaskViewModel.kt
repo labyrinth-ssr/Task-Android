@@ -15,15 +15,22 @@ class AddTaskViewModel(
     private val taskKey: Long = 0L,
     val database: TaskDatabaseDao) : ViewModel() {
 
-    private val task : LiveData<Task>
+    val task = MutableLiveData<Task>()
+    val subtasks: LiveData<List<Task>> = database.getChildren(taskKey)
+//    val taskContainer =
+    init {
+        if (taskKey != 0L){
+            viewModelScope.launch {
+                task.value = database.get(taskKey)
+                Log.i(TAG, "task init: "+ (task.value?.taskName)+"task id:"+taskKey)
+            }
+        }
+        else task.value = Task()
+    }
     private val dateString = MutableLiveData<String>()
     private val _navigateToHome = MutableLiveData<Boolean?>()
     val navigateToHome:LiveData<Boolean?>
     get() = _navigateToHome
-
-    init {
-        task = database.getTaskWithId(taskKey)
-    }
 
     fun onSetPriority(priority:Int) {
         task.value!!.priority = priority
@@ -32,23 +39,28 @@ class AddTaskViewModel(
     fun doneNavigating(){
         _navigateToHome.value = null
     }
-
-    fun getTask(): Task? {
-        return task.value;
-    }
+//
+//    fun getTask(): Task? {
+//        return task.value;
+//    }
 
     fun setTaskName(taskName:String){
-        task.value!!.taskName = taskName
+        task.value?.taskName = taskName
     }
 
     fun setStartTime(dateStr:String){
-        task.value!!.startTimeStamp = dateStr2timeStamp(dateStr)
+        task.value?.startTimeStamp = dateStr2timeStamp(dateStr)
     }
 
     fun onAddTask(){
         viewModelScope.launch {
             Log.i(TAG, "onAddTask: $task")
-            task.value?.let { insert(it) }
+            task.value?.let {
+                if (it.taskId == 0L)
+                    insert(it)
+                else
+                    update(it)
+            }
 //            _navigateToHome.value = true
         }
     }
@@ -59,5 +71,9 @@ class AddTaskViewModel(
 
     private suspend fun insert(newTask: Task) {
         database.insert(newTask)
+    }
+
+    private suspend fun update(existTask:Task){
+        database.update(existTask)
     }
 }

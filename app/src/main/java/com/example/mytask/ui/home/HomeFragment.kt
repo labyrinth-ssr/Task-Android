@@ -31,7 +31,6 @@ class HomeFragment : Fragment(){
      */
 
     private lateinit var adapter: TaskAdapter
-//    private val mNodeList: MutableList<Node> = ArrayList<Node>()
     lateinit var binding:FragmentHomeBinding
     lateinit var homeViewModel: HomeViewModel
 
@@ -40,6 +39,7 @@ class HomeFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false)
         val application = requireNotNull(this.activity).application
         val dataSource = TaskDatabase.getInstance(application).taskDatabaseDao
@@ -71,6 +71,9 @@ class HomeFragment : Fragment(){
                 adapter.mNodes = TreeHelper.filterVisibleNode(adapter.mAllNodes)
                 adapter.submitList(adapter.mNodes)
             }
+            if (it.isEmpty())
+                Log.i(TAG, "onCreateView: no tasks")
+            else Log.i(TAG, "onCreateView: "+it[0].taskName)
             Log.i(TAG, "onCreateView: observe item change")
         })
 //        initRecyclerView()

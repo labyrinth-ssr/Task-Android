@@ -76,9 +76,9 @@ fun transToTimeStamp(date:String):Long{
     return SimpleDateFormat("yy-MM-DD-hh-mm-ss").parse(date, ParsePosition(0)).time
 }
 
-fun tasksToNodes(tasks: List<Task>):MutableList<Node> {
+fun tasksToNodes(tasks: List<Task>?):MutableList<Node> {
     val nodes:MutableList<Node> = mutableListOf()
-    tasks.forEach {
+    tasks?.forEach {
         nodes.add(Node(it))
     }
     return nodes
