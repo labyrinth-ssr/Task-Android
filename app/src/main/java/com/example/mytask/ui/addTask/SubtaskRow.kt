@@ -35,7 +35,7 @@ import com.google.android.material.composethemeadapter.MdcTheme
 
 @Composable
 fun SubtaskRow(
-    existingSubtasks: Node,
+    existingSubtasks: List<Node>,
     newSubtasks: List<Task>,
     openSubtask: (Task) -> Unit,
     completeExistingSubtask: (Task, Boolean) -> Unit,

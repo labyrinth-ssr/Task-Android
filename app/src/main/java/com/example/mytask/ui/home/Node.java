@@ -1,17 +1,27 @@
 package com.example.mytask.ui.home;
 
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.versionedparcelable.ParcelField;
 
 import com.example.mytask.database.Task;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 
-public class Node {
+public class Node implements Parcelable {
     // 包含id,parentid,name
     Task task;
     /**
@@ -40,12 +50,65 @@ public class Node {
     public Node() {
     }
 
-
-
     public Node(Task task) {
         super();
         this.task = task;
     }
+
+    protected Node(Parcel in) {
+        isExpand = in.readByte() != 0;
+        isChecked = in.readByte() != 0;
+        isHideChecked = in.readByte() != 0;
+        level = in.readInt();
+        icon = in.readInt();
+        childrenNodes = in.createTypedArrayList(Node.CREATOR);
+        parent = in.readParcelable(Node.class.getClassLoader());
+    }
+
+    public static final Creator<Node> CREATOR = new Creator<Node>() {
+        @Override
+        public Node createFromParcel(Parcel in) {
+            return new Node(in);
+        }
+
+        @Override
+        public Node[] newArray(int size) {
+            return new Node[size];
+        }
+    };
+
+    public static <T> List<T> deepCopy(List<T> src) throws IOException, ClassNotFoundException {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(byteOut);
+        out.writeObject(src);
+
+        ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+        ObjectInputStream in = new ObjectInputStream(byteIn);
+        @SuppressWarnings("unchecked")
+        List<T> dest = (List<T>) in.readObject();
+        return dest;
+    }
+
+//    public Node(Node node) throws IOException, ClassNotFoundException {
+//        if (node!=null){
+//            if (node.task!=null)
+//                task = node.task ;
+//            isExpand = node.isExpand;
+//            isChecked = node.isChecked;
+//            isHideChecked = node.isHideChecked;
+//            level=node.level;
+//            icon = node.icon;
+//            if (node.childrenNodes !=null && node.childrenNodes.size()!=0){
+//                childrenNodes = new ArrayList<>();
+//                for (Node child:node.childrenNodes){
+//                    childrenNodes.add(new Node(child));
+//                }
+//            }
+//            if (node.parent!=null)
+//                parent = new Node(node.parent);
+//        }
+//
+//    }
 
     public Task getTask(){
         return this.task;
@@ -210,7 +273,7 @@ public class Node {
                 ", isChecked=" + isChecked +
                 ", isHideChecked=" + isHideChecked +
                 ", name='" + task.getTaskName() + '\'' +
-                ", level=" + level +
+                ", level=" + getLevel() +
                 ", icon=" + icon +
 //                ", size=" + size +
                 '}';
@@ -218,7 +281,7 @@ public class Node {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+//        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
         return isExpand == node.isExpand && isChecked == node.isChecked && isHideChecked == node.isHideChecked && level == node.level && icon == node.icon && task.equals(node.task) && Objects.equals(childrenNodes, node.childrenNodes) && Objects.equals(parent, node.parent);
@@ -227,5 +290,21 @@ public class Node {
     @Override
     public int hashCode() {
         return Objects.hash(task, isExpand, isChecked, isHideChecked, level, icon, childrenNodes, parent);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeByte((byte) (isExpand ? 1 : 0));
+        dest.writeByte((byte) (isChecked ? 1 : 0));
+        dest.writeByte((byte) (isHideChecked ? 1 : 0));
+        dest.writeInt(level);
+        dest.writeInt(icon);
+        dest.writeTypedList(childrenNodes);
+        dest.writeParcelable(parent, flags);
     }
 }

@@ -18,9 +18,9 @@ import com.example.mytask.R
 import com.example.mytask.database.TaskDatabase
 import com.example.mytask.databinding.FragmentHomeBinding
 import com.example.mytask.tasksToNodes
+import timber.log.Timber
 
 class HomeFragment : Fragment(){
-
     /**
      * 和view进行数据绑定
      *
@@ -29,7 +29,6 @@ class HomeFragment : Fragment(){
      * @param savedInstanceState
      * @return
      */
-
     private lateinit var adapter: TaskAdapter
     lateinit var binding:FragmentHomeBinding
     lateinit var homeViewModel: HomeViewModel
@@ -54,9 +53,15 @@ class HomeFragment : Fragment(){
         binding.taskList.layoutManager = LinearLayoutManager(activity)
         binding.taskList.adapter = adapter
 
+        adapter.mNodesLive.observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
+        })
+
         homeViewModel.navigateToAddTask.observe(viewLifecycleOwner, Observer {
+
             task->
             task?.let {
+                Timber.i("home navigate to add?"+it.taskName)
                 this.findNavController().navigate(
                     HomeFragmentDirections.actionNavHomeToAddTask(task.taskId)
                 )
@@ -65,17 +70,25 @@ class HomeFragment : Fragment(){
             }
         })
 
+//        homeViewModel.
+
         homeViewModel.tasks.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.mAllNodes = TreeHelper.getSortedNodes(tasksToNodes(it))
-                adapter.mNodes = TreeHelper.filterVisibleNode(adapter.mAllNodes)
-                adapter.submitList(adapter.mNodes)
+                Timber.i(adapter.mAllNodes.size.toString())
+                adapter.mNodesLive.value = TreeHelper.filterVisibleNode(adapter.mAllNodes)
+                adapter.mNodesLive.value!!.forEach {
+                    Timber.i(it.toString())
+                }
+//                adapter.submitList(adapter.mNodes)
             }
             if (it.isEmpty())
                 Log.i(TAG, "onCreateView: no tasks")
             else Log.i(TAG, "onCreateView: "+it[0].taskName)
             Log.i(TAG, "onCreateView: observe item change")
         })
+
+
 //        initRecyclerView()
         return binding.root
     }

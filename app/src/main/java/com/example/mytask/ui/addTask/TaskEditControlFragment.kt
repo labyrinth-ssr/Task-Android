@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 
 abstract class TaskEditControlFragment : Fragment() {
@@ -18,7 +20,9 @@ abstract class TaskEditControlFragment : Fragment() {
     ): View? {
         val composeView = ComposeView(requireActivity())
         viewModel = ViewModelProvider(requireParentFragment())[AddTaskViewModel::class.java]
-        bind(composeView)
+        viewModel.subtasks.observe(viewLifecycleOwner, Observer {
+            bind(composeView)
+        })
         createView(savedInstanceState)
         return composeView
     }

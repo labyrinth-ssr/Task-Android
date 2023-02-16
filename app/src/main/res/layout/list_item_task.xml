@@ -29,7 +29,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:focusable="false" />
+            android:focusable="false"
+            app:checkBoxDisplay="@{node}"/>
 
         <TextView
             android:id="@+id/id_treenode_name"

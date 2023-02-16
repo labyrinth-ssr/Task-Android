@@ -1,5 +1,7 @@
 package com.example.mytask.ui.home
 
+import timber.log.Timber
+
 object TreeHelper {
     /**
      * 根据所有节点获取可见节点
@@ -65,6 +67,8 @@ object TreeHelper {
             val n = nodes[i]
             for (j in i + 1 until nodes.size) {
                 val m = nodes[j]
+                Timber.i("nid:"+n.id+" m parent id:"+m.getparentId())
+                Timber.i("n parent id:"+n.getparentId()+" m id:"+m.id)
                 if (n.id == m.getparentId()) {
                     n.childrenNodes.add(m)
                     m.parent = n
@@ -85,7 +89,7 @@ object TreeHelper {
          */
         setChildrenNodeChecked(node, isChecked)
         /** 父节点处理  */
-        setParentNodeChecked(node)
+//        setParentNodeChecked(node)
     }
 
     /**

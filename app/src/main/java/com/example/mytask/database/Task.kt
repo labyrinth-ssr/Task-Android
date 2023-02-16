@@ -1,6 +1,5 @@
 package com.example.mytask.database
 
-import android.renderscript.RenderScript
 import androidx.annotation.IntDef
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -19,7 +18,16 @@ class Task{
     @ColumnInfo(name = "end_time_milli")
     var dueTimeStamp: Long = startTimeStamp
     @ColumnInfo(name = "priority")
-    var priority: Int = Priority.NONE
+    var priority: Int = Priority.LOW
+    /** Unixtime Task was completed. 0 means active  */
+    @ColumnInfo(name = "completed")
+    var completionDate = 0L
+    @ColumnInfo(name = "deleted")
+    var deleted = false
+    /** Unixtime Task was last touched  */
+    @ColumnInfo(name = "modified")
+    var modificationDate = 0L
+
     var isCompleted:Boolean = false
     var isRecurring:Boolean = false
 

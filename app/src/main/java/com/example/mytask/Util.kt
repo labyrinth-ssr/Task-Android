@@ -2,18 +2,20 @@ package com.example.mytask
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
-import android.content.res.Resources
+import android.icu.text.RelativeDateTimeFormatter
 import android.os.Build
-import android.text.Html
-import android.text.Spanned
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import android.widget.TextView
-import androidx.core.text.HtmlCompat
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytask.database.Task
 import com.example.mytask.ui.home.Node
+import java.lang.System.currentTimeMillis
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
+
 
 /**
  * Take the Long milliseconds returned by the system and stored in Room,
@@ -26,6 +28,15 @@ import java.text.SimpleDateFormat
 fun convertLongToDateString(systemTime: Long): String {
     return SimpleDateFormat("yyyy-MM-dd HH:mm")
         .format(systemTime).toString()
+}
+
+@RequiresApi(Build.VERSION_CODES.N)
+fun getRelativeDay(){
+    val fmt = RelativeDateTimeFormatter.getInstance()
+}
+
+fun now(): Long {
+    return currentTimeMillis()
 }
 
 
@@ -85,3 +96,16 @@ fun tasksToNodes(tasks: List<Task>?):MutableList<Node> {
 }
 
 class TextItemViewHolder(val textView: TextView): RecyclerView.ViewHolder(textView)
+
+fun <T : Parcelable> deepClone(objectToClone: T): T? {
+    var parcel: Parcel? = null
+    return try {
+        parcel = Parcel.obtain()
+        parcel.writeParcelable(objectToClone, 0)
+        parcel.setDataPosition(0)
+        parcel.readParcelable(objectToClone::class.java.classLoader)
+    } finally {
+        //it is important to recyle parcel and free up resources once done.
+        parcel?.recycle()
+    }
+}

@@ -12,7 +12,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.MutableLiveData
 import com.example.mytask.database.Task
 import com.example.mytask.ui.addTask.AddTaskViewModel
-import java.time.LocalDate
+import timber.log.Timber
 import java.util.*
 
 class DatePickerFragment() : DialogFragment(), DatePickerDialog.OnDateSetListener {
@@ -20,6 +20,7 @@ class DatePickerFragment() : DialogFragment(), DatePickerDialog.OnDateSetListene
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        Timber.i("tag:"+tag)
         // Use the current date as the default date in the picker
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
@@ -35,10 +36,12 @@ class DatePickerFragment() : DialogFragment(), DatePickerDialog.OnDateSetListene
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
         // Do something with the date chosen by the user
         val sb = StringBuilder()
-        sb.append(year).append("-").append(month).append("-").append(day)
+        sb.append(year).append("-").append(month+1).append("-").append(day)
         val result = sb.toString()
         Log.i(TAG, "onDateSet: " + result)
-
-        setFragmentResult("date_set", bundleOf("bundleKey" to result))
+        if (tag == "pick_begin_time")
+            setFragmentResult("begin_date_set", bundleOf("bundleKey" to result))
+        else if (tag == "pick_due_time")
+            setFragmentResult("due_date_set", bundleOf("bundleKey" to result))
     }
 }

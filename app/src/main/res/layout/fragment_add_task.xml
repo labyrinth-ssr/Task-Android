@@ -20,16 +20,16 @@
                 android:id="@+id/task_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:hint="@string/task_name"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                >
+                app:layout_constraintTop_toBottomOf="@id/imageButton">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/task_name_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{addTaskViewModel.task.taskName}"/>
+                    android:text="@{addTaskViewModel.task.taskName}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -52,7 +52,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/task_name"
                 app:layout_constraintStart_toEndOf="@+id/icon_start_time"
                 app:layout_constraintTop_toBottomOf="@+id/task_name"
-                dueTimeFormatted=""/>
+                />
 
             <ImageView
                 android:id="@+id/icon_service_question"
@@ -99,17 +99,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:checkedButton="@id/prio_low"
+                app:checkedButton="@id/prio_low"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="@id/service_question"
                 app:layout_constraintStart_toEndOf="@+id/service_question">
+
+                <RadioButton
+                    android:id="@+id/prio_none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{()-> addTaskViewModel.onSetPriority(3)}"/>
 
                 <RadioButton
                     android:id="@+id/prio_low"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:buttonTint="#03A9F4"
-                    android:onClick="@{()-> addTaskViewModel.onSetPriority(0)}"/>
+                    android:onClick="@{()-> addTaskViewModel.onSetPriority(2)}"/>
 
                 <RadioButton
                     android:id="@+id/prio_medium"
@@ -123,7 +129,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:buttonTint="#F4511E"
-                    android:onClick="@{()-> addTaskViewModel.onSetPriority(2)}"/>
+                    android:onClick="@{()-> addTaskViewModel.onSetPriority(0)}"/>
 
             </RadioGroup>
 
@@ -131,21 +137,19 @@
                 android:id="@+id/imageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                android:onClick="@{() -> addTaskViewModel.onAddTask()}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:srcCompat="@drawable/ic_baseline_save_24"
-                android:onClick="@{() -> addTaskViewModel.onAddTask()}"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_save_24" />
 
             <ImageButton
                 android:id="@+id/imageButton2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/prio_options"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_delete_24" />
 
             <androidx.compose.ui.platform.ComposeView
