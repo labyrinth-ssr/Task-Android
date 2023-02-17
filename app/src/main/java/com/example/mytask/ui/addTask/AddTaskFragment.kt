@@ -1,5 +1,6 @@
 package com.example.mytask.ui.addTask
 
+import android.app.Activity
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
@@ -7,39 +8,36 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.viewinterop.AndroidViewBinding
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mytask.DatePickerFragment
 import com.example.mytask.DateUtilities
 import com.example.mytask.R
+import com.example.mytask.calendar.PermissionChecker
 import com.example.mytask.database.Task
 import com.example.mytask.database.TaskDatabase
 import com.example.mytask.databinding.FragmentAddTaskBinding
+import com.example.mytask.databinding.TaskEditCalendarBinding
 import com.example.mytask.databinding.TaskEditSubtasksBinding
+import com.example.mytask.databinding.TaskEditTimerBinding
+import com.example.mytask.time.TimerPlugin
 import com.google.android.material.composethemeadapter.MdcTheme
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import javax.inject.Inject
 
-class AddTaskFragment : Fragment() {
+
+@AndroidEntryPoint
+class AddTaskFragment : Fragment(){
+
+    lateinit var timerPlugin: TimerPlugin
+    @Inject lateinit var context: Activity
+    @Inject lateinit var permissionChecker: PermissionChecker
     // This property is only valid between onCreateView and
     // onDestroyView.
 
@@ -54,7 +52,8 @@ class AddTaskFragment : Fragment() {
         val application = requireNotNull(this.activity).application
         val arguments = AddTaskFragmentArgs.fromBundle(requireArguments())
         val dataSource = TaskDatabase.getInstance(application).taskDatabaseDao
-        val viewModelFactory = AddTaskViewModelFactory(arguments.taskKey,dataSource)
+        val viewModelFactory = AddTaskViewModelFactory(arguments.taskKey,dataSource, permissionChecker)
+        timerPlugin = TimerPlugin(dataSource)
         addTaskViewModel =
             ViewModelProvider(this,viewModelFactory).get(AddTaskViewModel::class.java)
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_add_task,container,false)
@@ -99,9 +98,7 @@ class AddTaskFragment : Fragment() {
                 Task.Priority.HIGH -> id = R.id.prio_high
             }
             priority.check(id)
-
         })
-
 
         val saveButton = binding.imageButton
         saveButton.setOnClickListener {
@@ -114,6 +111,8 @@ class AddTaskFragment : Fragment() {
             MdcTheme {
                 Column {
                     AndroidViewBinding(TaskEditSubtasksBinding::inflate)
+                    AndroidViewBinding(TaskEditTimerBinding::inflate)
+                    AndroidViewBinding(TaskEditCalendarBinding::inflate)
                 }
             }
         }
@@ -162,6 +161,28 @@ class AddTaskFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+    }
+
+    suspend fun stopTimer(): Task {
+        val model = addTaskViewModel.task.value!!
+        timerPlugin.startTimer(model)
+//        addComment(String.format(
+//            "%s %s",
+//            getString(R.string.TEA_timer_comment_started),
+//            DateUtilities.getTimeString(context, newDateTime())),
+//            null)
+        return model
+    }
+
+    suspend fun startTimer(): Task {
+        val model = addTaskViewModel.task.value!!
+        timerPlugin.startTimer(model)
+//        editViewModel.addComment(String.format(
+//            "%s %s",
+//            getString(R.string.TEA_timer_comment_started),
+//            DateUtilities.getTimeString(context, newDateTime())),
+//            null)
+        return model
     }
 }
 

@@ -22,7 +22,20 @@
     <string name="subtask_tag">subtask</string>
     <string name="add_subtask">添加子任务</string>
     <string name="delete">删除</string>
+    <string name="timer_controls">计时器</string>
+    <string name="ctrl_timer_pref">ctrl_timer</string>
+    <string name="TEA_timer_est">Est. %s</string>
+    <string name="TEA_timer_elap">已进行 %s</string>
+    <string name="TEA_timer_controls">计时器</string>
+    <string name="gcal_TEA_showCalendar_label">点击添加日历</string>
+    <string name="dont_add_to_calendar">不填加到日历</string>
+    <string name="TEA_ctrl_gcal">TEA_ctrl_gcal</string>
 
+    <!-- Default Calendar Preference Key (do not translate) -->
+    <string name="gcal_p_default">default_calendar_id</string>
+
+    <string name="calendar_event_not_found">找不到日历事件</string>
+    <string name="gcal_TEA_error">添加任务到日历发生错误！</string>
 
 
 </resources>

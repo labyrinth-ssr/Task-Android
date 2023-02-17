@@ -39,19 +39,6 @@ class SubtaskControlSet: TaskEditControlFragment() {
 //            listViewModel.setFilter(Filter("subtasks", getQueryTemplate(it)))
 //        }
     }
-    private fun openSubtask(task: Task) = lifecycleScope.launch {
-        eventBus.emit(MainActivityEvent.OpenTask(task))
-    }
-
-    private fun addSubtask() = lifecycleScope.launch {
-        val task = Task()
-        viewModel.newSubtasks.value = viewModel.newSubtasks.value.plus(task)
-//        viewModel.newSubtasks.value = viewModel.newSubtasks.value.plus(task)
-    }
-
-    private fun complete(task: Task, completed: Boolean) = lifecycleScope.launch {
-        taskCompleter.setComplete(task, completed)
-    }
 
     override fun bind(parent: ViewGroup?): View =
         (parent as ComposeView).apply {
@@ -75,34 +62,6 @@ class SubtaskControlSet: TaskEditControlFragment() {
                                 }
                             }
                         )
-//                    }
-//                    SubtaskRow(
-////                        filter = viewModel.selectedList.collectAsStateLifecycleAware().value,
-////                        googleTask = googleTaskDao.watchGoogleTask(viewModel.task.id).collectAsStateLifecycleAware(initial = null).value,
-////                        desaturate = preferences.desaturateDarkMode,
-//                        existingSubtasks = listViewModel.tasks.observeAsState(initial = emptyList()).value,
-//                        newSubtasks = viewModel.newSubtasks.collectAsStateLifecycleAware().value,
-//                        openSubtask = this@SubtaskControlSet::openSubtask,
-//                        completeExistingSubtask = this@SubtaskControlSet::complete,
-//                        toggleSubtask = this@SubtaskControlSet::toggleSubtask,
-//                        addSubtask = this@SubtaskControlSet::addSubtask,
-     //                        completeNewSubtask = {
-//                            viewModel.newSubtasks.value =
-//                                ArrayList(viewModel.newSubtasks.value).apply {
-//                                    val modified = it.clone().apply {
-//                                        completionDate =
-//                                            if (isCompleted) 0 else now()
-//                                    }
-//                                    set(indexOf(it), modified)
-//                                }
-//                        },
-//                        deleteSubtask = {
-//                            viewModel.newSubtasks.value =
-//                                ArrayList(viewModel.newSubtasks.value).apply {
-//                                    remove(it)
-//                                }
-//                        }
-//                    )
                 }
             }
         }
@@ -118,6 +77,14 @@ class SubtaskControlSet: TaskEditControlFragment() {
 //        eventBus.emit(MainActivityEvent.OpenTask(task))
 //    }
 //
+    private fun openSubtask(task: Task) = lifecycleScope.launch {
+        eventBus.emit(MainActivityEvent.OpenTask(task))
+    }
+
+    private fun addSubtask() = lifecycleScope.launch {
+        val task = Task()
+        viewModel.newSubtasks.value = viewModel.newSubtasks.value.plus(task)
+    }
 //    private fun toggleSubtask(taskId: Long, collapsed: Boolean) = lifecycleScope.launch {
 //        taskDao.setCollapsed(taskId, collapsed)
 //    }
@@ -125,6 +92,9 @@ class SubtaskControlSet: TaskEditControlFragment() {
 //    private fun complete(task: Task, completed: Boolean) = lifecycleScope.launch {
 //        taskCompleter.setComplete(task, completed)
 //    }
+    private fun complete(task: Task, completed: Boolean) = lifecycleScope.launch {
+        taskCompleter.setComplete(task, completed)
+    }
 
     companion object {
         const val TAG = R.string.subtask_tag

@@ -2,7 +2,6 @@ package com.example.mytask
 
 import android.os.Bundle
 import android.view.Menu
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -11,14 +10,14 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
-import com.example.mytask.database.TaskDatabase
+import com.example.mytask.database.Task
 import com.example.mytask.databinding.ActivityMainBinding
-import com.example.mytask.ui.addTask.AddTaskViewModel
-import com.example.mytask.ui.addTask.AddTaskViewModelFactory
+import com.example.mytask.ui.addTask.AddTaskFragment
+import com.example.mytask.ui.addTask.TimerControlSet
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity(),TimerControlSet.TimerControlSetCallback {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -56,4 +55,28 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+
+    override suspend fun stopTimer(): Task {
+        val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main)!!
+        val addTaskFragment = navHost.childFragmentManager.primaryNavigationFragment!! as AddTaskFragment
+        return addTaskFragment.stopTimer()
+    }
+
+    override suspend fun startTimer(): Task {
+        val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main)!!
+        val addTaskFragment = navHost.childFragmentManager.primaryNavigationFragment!! as AddTaskFragment
+        return addTaskFragment.startTimer()
+    }
+
+//    val taskEditFragment: AddTaskFragment?
+//        get() = supportFragmentManager.findFragmentByTag(TaskEditFragment.TAG_TASKEDIT_FRAGMENT) as TaskEditFragment?
+
+//    override suspend fun stopTimer(): Task {
+//        return R.stopTimer()
+//    }
+
+//    override suspend fun startTimer(): Task {
+//        TODO("Not yet implemented")
+//    }
 }

@@ -84,6 +84,7 @@ object TreeHelper {
     fun setNodeChecked(node: Node, isChecked: Boolean) {
         // 自己设置是否选择
         node.isChecked = isChecked
+        node.task.isCompleted = isChecked
         /**
          * 非叶子节点,子节点处理
          */
@@ -97,6 +98,7 @@ object TreeHelper {
      */
     private fun setChildrenNodeChecked(node: Node, isChecked: Boolean) {
         node.isChecked = isChecked
+        node.task.isCompleted = isChecked
         if (!node.isLeaf) {
             for (n in node.childrenNodes) {
                 // 所有子节点设置是否选择

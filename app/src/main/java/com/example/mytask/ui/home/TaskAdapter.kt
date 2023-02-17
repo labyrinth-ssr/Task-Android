@@ -87,6 +87,7 @@ class TaskAdapter(val clickListener: TaskListener) : ListAdapter<Node,RecyclerVi
         innerViewHolder.checkBox.setOnClickListener {
             val isChecked = !mNodes[position].isChecked
             TreeHelper.setNodeChecked(mNodes[position], isChecked)
+
             notifyDataSetChanged()
 //            submitList(mNodes)
         }
@@ -175,16 +176,6 @@ class TaskAdapter(val clickListener: TaskListener) : ListAdapter<Node,RecyclerVi
         }
     }
 
-//    fun getPriorityColor(priority:Int):android.graphics.Color{
-//        when (priority){
-//            Task.Priority.NONE -> return ColorProvider.priorityColor(priority,false,true)
-//            Task.Priority.LOW -> return "#03A9F4"
-//            Task.Priority.MEDIUM -> return "#FFD740"
-//            Task.Priority.HIGH -> return "#F4511E"
-//        }
-//        return "#03A9F4"
-//    }
-
 //    private var onTreeNodeClickListener: OnTreeNodeClickListener? = null
 
 //    interface OnTreeNodeClickListener {
@@ -219,5 +210,7 @@ class TaskDiffCallback:DiffUtil.ItemCallback<Node>(){
 class TaskListener(val clickListener: (task:Task)->Unit){
     fun onCLick(task:Task)= clickListener(task)
 }
+
+class CheckboxListener(val checkboxListener: ()->Unit)
 
 

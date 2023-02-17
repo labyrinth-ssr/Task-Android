@@ -1,11 +1,8 @@
 package com.example.mytask;
 
 import android.annotation.SuppressLint;
-
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 public class DateUtilities {
 
@@ -17,6 +14,11 @@ public class DateUtilities {
         String tsStr = sdf.format(ts);
         return  tsStr;
     }
+
+    public static long now() {
+        return System.currentTimeMillis();
+    }
+
 
 
     public static String dayStringFormat(long msecs) {

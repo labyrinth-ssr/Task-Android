@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.mytask.database.SuspendDbUtils.chunkedMap
 import com.example.mytask.now
+import dagger.Binds
 
 //import org.todoroo.andlib.utility.com.example.mytask.DateUtilities.now
 
@@ -63,4 +64,6 @@ FROM recursive_tasks
     abstract suspend fun fetchInternal(ids: List<Long>): List<Task>
 
     suspend fun fetch(ids: List<Long>): List<Task> = ids.chunkedMap(this::fetchInternal)
+
+//    suspend fun setComplete(id: Long)
 }

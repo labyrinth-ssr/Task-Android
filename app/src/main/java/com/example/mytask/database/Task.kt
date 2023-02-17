@@ -27,6 +27,12 @@ class Task{
     /** Unixtime Task was last touched  */
     @ColumnInfo(name = "modified")
     var modificationDate = 0L
+    @ColumnInfo(name = "elapsedSeconds")
+    var elapsedSeconds = 0
+    @ColumnInfo(name = "timerStart")
+    var timerStart = 0L
+    @ColumnInfo(name = "calendarUri")
+    var calendarURI: String? = null
 
     var isCompleted:Boolean = false
     var isRecurring:Boolean = false

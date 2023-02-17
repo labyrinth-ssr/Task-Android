@@ -1,8 +1,12 @@
 package com.example.mytask.ui.addTask
 
 import android.content.ContentValues.TAG
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
+import com.example.mytask.R
+import com.example.mytask.calendar.PermissionChecker
 import com.example.mytask.database.Task
 import com.example.mytask.database.TaskDatabaseDao
 import com.example.mytask.dateStr2timeStamp
@@ -14,13 +18,26 @@ import kotlinx.coroutines.launch
 import java.util.Collections.addAll
 import javax.annotation.Nonnull
 
-class AddTaskViewModel(
+class AddTaskViewModel (
     private val taskKey: Long = 0L,
+    private val permissionChecker: PermissionChecker,
     val database: TaskDatabaseDao) : ViewModel(), Observer<List<Node>> {
 
     val task = MutableLiveData<Task>()
     val subtasks = MutableLiveData<List<Node>?>()
     var newSubtasks = MutableStateFlow(emptyList<Task>())
+    val timerStarted = MutableStateFlow(task.value?.timerStart)
+    val elapsedSeconds = MutableStateFlow(task.value?.elapsedSeconds)
+    var eventUri = MutableStateFlow(task.value?.calendarURI)
+    val isNew = taskKey == 0L
+    @RequiresApi(Build.VERSION_CODES.M)
+    private var originalCalendar: String? = if (isNew && permissionChecker.canAccessCalendars()) {
+        "default_calendar_id"
+    } else {
+        null
+    }
+    @RequiresApi(Build.VERSION_CODES.M)
+    var selectedCalendar = MutableStateFlow(originalCalendar)
 
 
     suspend fun taskKeyToNode(taskKey: Long) : MutableList<Node>{
@@ -38,8 +55,8 @@ class AddTaskViewModel(
     init {
         if (taskKey != 0L){
             viewModelScope.launch {
-                task.value = database.get(taskKey)
                 subtasks.value = taskKeyToNode(taskKey)
+                task.value = database.get(taskKey)
                 Log.i(TAG, "task init: "+ (task.value?.taskName)+"task id:"+taskKey)
             }
         }

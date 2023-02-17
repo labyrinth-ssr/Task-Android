@@ -20,7 +20,7 @@ abstract class TaskEditControlFragment : Fragment() {
     ): View? {
         val composeView = ComposeView(requireActivity())
         viewModel = ViewModelProvider(requireParentFragment())[AddTaskViewModel::class.java]
-        viewModel.subtasks.observe(viewLifecycleOwner, Observer {
+        viewModel.task.observe(viewLifecycleOwner, Observer {
             bind(composeView)
         })
         createView(savedInstanceState)

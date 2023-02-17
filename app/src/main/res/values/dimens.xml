@@ -7,5 +7,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="margin">16dp</dimen>
     <dimen name="padding">16dp</dimen>
+    <item format="float" name="alpha_secondary" type="dimen">0.54</item>
+
 
 </resources>

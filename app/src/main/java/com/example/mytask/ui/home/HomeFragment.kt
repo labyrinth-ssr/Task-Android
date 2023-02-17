@@ -12,12 +12,14 @@ import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mytask.R
 import com.example.mytask.database.TaskDatabase
 import com.example.mytask.databinding.FragmentHomeBinding
 import com.example.mytask.tasksToNodes
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class HomeFragment : Fragment(){
@@ -80,12 +82,13 @@ class HomeFragment : Fragment(){
                 adapter.mNodesLive.value!!.forEach {
                     Timber.i(it.toString())
                 }
+//                lifecycleScope.launch()
 //                adapter.submitList(adapter.mNodes)
             }
-            if (it.isEmpty())
-                Log.i(TAG, "onCreateView: no tasks")
-            else Log.i(TAG, "onCreateView: "+it[0].taskName)
-            Log.i(TAG, "onCreateView: observe item change")
+//            if (it.isEmpty())
+//                Log.i(TAG, "onCreateView: no tasks")
+//            else Log.i(TAG, "onCreateView: "+it[0].taskName)
+//            Log.i(TAG, "onCreateView: observe item change")
         })
 
 
