@@ -2,13 +2,18 @@ package com.example.mytask.ui.addTask
 
 import android.app.Activity
 import android.content.ContentValues.TAG
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.compose.foundation.layout.*
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -18,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.mytask.DatePickerFragment
 import com.example.mytask.DateUtilities
 import com.example.mytask.R
+import com.example.mytask.calendar.CalendarPicker
 import com.example.mytask.calendar.PermissionChecker
 import com.example.mytask.database.Task
 import com.example.mytask.database.TaskDatabase
@@ -29,6 +35,7 @@ import com.example.mytask.time.TimerPlugin
 import com.google.android.material.composethemeadapter.MdcTheme
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 
@@ -43,6 +50,27 @@ class AddTaskFragment : Fragment(){
 
     lateinit var binding:FragmentAddTaskBinding;
     lateinit var addTaskViewModel: AddTaskViewModel;
+
+    fun insertCalendar(){
+        val startMillis: Long = Calendar.getInstance().run {
+            set(2023, 1, 18, 7, 30)
+            timeInMillis
+        }
+        val endMillis: Long = Calendar.getInstance().run {
+            set(2023, 1, 18, 8, 30)
+            timeInMillis
+        }
+        val intent = Intent(Intent.ACTION_INSERT)
+            .setData(CalendarContract.Events.CONTENT_URI)
+            .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
+            .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis)
+            .putExtra(CalendarContract.Events.TITLE, "Yoga")
+            .putExtra(CalendarContract.Events.DESCRIPTION, "Group class")
+            .putExtra(CalendarContract.Events.EVENT_LOCATION, "The gym")
+            .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY)
+//            .putExtra(Intent.EXTRA_EMAIL, "rowan@example.com,trevor@example.com")
+//        startActivity(intent)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,6 +89,7 @@ class AddTaskFragment : Fragment(){
         addTaskViewModel.navigateToHome.observe(viewLifecycleOwner, Observer{
             Timber.i("add navigate to home?"+it)
             if (it==true){
+                insertCalendar()
                 this.findNavController().navigate(AddTaskFragmentDirections.actionAddTaskToNavHome())
                 addTaskViewModel.doneNavigating()
             }
@@ -155,6 +184,21 @@ class AddTaskFragment : Fragment(){
 //                addTaskViewModel.setStartTime(result)
 //            }
 //        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            70 -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    addTaskViewModel.selectedCalendar.value =
+                        data!!.getStringExtra(CalendarPicker.EXTRA_CALENDAR_ID)
+                }
+            }
+            else -> super.onActivityResult(requestCode, resultCode, data)
+        }
+
     }
 
 

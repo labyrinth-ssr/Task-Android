@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.example.mytask.DialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -22,6 +23,7 @@ class CalendarPicker : DialogFragment() {
                 CalendarPicker(
                     selected = arguments?.getString(EXTRA_SELECTED),
                     onSelected = {
+                        Timber.i("pick calendar:+"+it?.name+" "+it?.id)
                         targetFragment!!.onActivityResult(
                             targetRequestCode,
                             Activity.RESULT_OK,

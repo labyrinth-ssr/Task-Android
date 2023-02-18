@@ -19,8 +19,6 @@ public class DateUtilities {
         return System.currentTimeMillis();
     }
 
-
-
     public static String dayStringFormat(long msecs) {
         final long ONE_SECOND = 1000L;
         final long ONE_MINUTE = 60000L;
@@ -48,14 +46,7 @@ public class DateUtilities {
             int finalUnits = (int) timeAgo;
             return  "in "+finalUnits +" " + "Days";
         }
-//        else if (difference < ONE_YEAR) {
-//            long timeAgo = difference / ONE_MONTH;
-//            int finalUnits = (int) timeAgo;
-//            return  finalUnits + " " + "Months Ago";
-//        }
         else {
-//            long timeAgo = difference / ONE_MONTH;
-//            int finalUnits = (int) timeAgo;
             return testTimestampToString(msecs);
         }
     }

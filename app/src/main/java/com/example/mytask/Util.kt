@@ -30,15 +30,9 @@ fun convertLongToDateString(systemTime: Long): String {
         .format(systemTime).toString()
 }
 
-@RequiresApi(Build.VERSION_CODES.N)
-fun getRelativeDay(){
-    val fmt = RelativeDateTimeFormatter.getInstance()
-}
-
 fun now(): Long {
     return currentTimeMillis()
 }
-
 
 /**
  * Takes a list of SleepNights and converts and formats it into one string for display.

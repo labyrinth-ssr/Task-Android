@@ -40,7 +40,6 @@ class HomeFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false)
         val application = requireNotNull(this.activity).application
         val dataSource = TaskDatabase.getInstance(application).taskDatabaseDao
@@ -54,6 +53,8 @@ class HomeFragment : Fragment(){
         })
         binding.taskList.layoutManager = LinearLayoutManager(activity)
         binding.taskList.adapter = adapter
+
+//        val checkBox = binding.
 
         adapter.mNodesLive.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
@@ -72,8 +73,6 @@ class HomeFragment : Fragment(){
             }
         })
 
-//        homeViewModel.
-
         homeViewModel.tasks.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.mAllNodes = TreeHelper.getSortedNodes(tasksToNodes(it))
@@ -85,41 +84,12 @@ class HomeFragment : Fragment(){
 //                lifecycleScope.launch()
 //                adapter.submitList(adapter.mNodes)
             }
-//            if (it.isEmpty())
-//                Log.i(TAG, "onCreateView: no tasks")
-//            else Log.i(TAG, "onCreateView: "+it[0].taskName)
-//            Log.i(TAG, "onCreateView: observe item change")
         })
 
-
-//        initRecyclerView()
         return binding.root
     }
-
-//    private fun initRecyclerView() {
-////        mNodeList.clear()
-////        homeViewModel.tasks.value?.forEach {
-////            mNodeList.add(Node(it))
-////        }
-////        if (homeViewModel.tasks.value==null){
-////            Log.i(TAG, "initRecyclerView: task null")
-////        }
-//
-////        adapter.setOnTreeNodeClickListener(this)
-////        binding.taskList.layoutManager = LinearLayoutManager(activity)
-////        binding.taskList.adapter = adapter
-//    }
-
     override fun onDestroyView() {
         super.onDestroyView()
 //        binding = null
     }
-
-//    override fun onTreeItemClick(node: Node, position: Int) {
-//        if (node.isLeaf) {
-//            Toast.makeText(
-//                activity?.applicationContext, node.name,
-//                Toast.LENGTH_SHORT).show()
-//        }
-//    }
 }

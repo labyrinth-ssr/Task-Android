@@ -87,9 +87,7 @@ class TaskAdapter(val clickListener: TaskListener) : ListAdapter<Node,RecyclerVi
         innerViewHolder.checkBox.setOnClickListener {
             val isChecked = !mNodes[position].isChecked
             TreeHelper.setNodeChecked(mNodes[position], isChecked)
-
             notifyDataSetChanged()
-//            submitList(mNodes)
         }
 
         innerViewHolder.icon.setOnClickListener {

@@ -1,10 +1,16 @@
 package com.example.mytask.ui.addTask
 
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.Intent
 import android.os.Build
+import android.provider.CalendarContract
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.*
+import androidx.lifecycle.Observer
+import com.example.mytask.MyTasksApplication
 import com.example.mytask.R
 import com.example.mytask.calendar.PermissionChecker
 import com.example.mytask.database.Task
@@ -15,8 +21,11 @@ import com.example.mytask.ui.home.Node
 import com.example.mytask.ui.home.TreeHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.security.AccessController.getContext
+import java.util.*
 import java.util.Collections.addAll
 import javax.annotation.Nonnull
+import kotlin.collections.ArrayList
 
 class AddTaskViewModel (
     private val taskKey: Long = 0L,
@@ -74,7 +83,7 @@ class AddTaskViewModel (
     fun doneNavigating(){
         _navigateToHome.value = false
     }
-//
+
 //    fun getTask(): Task? {
 //        return task.value;
 //    }
@@ -90,6 +99,8 @@ class AddTaskViewModel (
     fun setDueTime(dateStr:String){
         task.value?.dueTimeStamp = dateStr2timeStamp(dateStr)
     }
+
+
 
     fun onAddTask(){
         viewModelScope.launch {

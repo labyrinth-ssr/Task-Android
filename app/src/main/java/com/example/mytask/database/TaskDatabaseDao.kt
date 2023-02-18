@@ -32,32 +32,31 @@ interface TaskDatabaseDao {
     @Query("UPDATE task_table SET completed = :completionDate, modified = :updateTime WHERE taskId IN (:taskIds)")
     abstract suspend fun setCompletionDate(taskIds: List<Long>, completionDate: Long, updateTime: Long = now())
     @Query("""
-WITH RECURSIVE recursive_tasks (task, parent) AS (
-    SELECT taskId, parent_task_id FROM task_table WHERE taskId = :parent
-    UNION ALL
-    SELECT taskId, task_table.parent_task_id FROM task_table
-        INNER JOIN recursive_tasks ON recursive_tasks.parent = task_table.taskId
-    WHERE task_table.deleted = 0
-)
-SELECT task
-FROM recursive_tasks
-""")
+    WITH RECURSIVE recursive_tasks (task, parent) AS (
+        SELECT taskId, parent_task_id FROM task_table WHERE taskId = :parent
+        UNION ALL
+        SELECT taskId, task_table.parent_task_id FROM task_table
+            INNER JOIN recursive_tasks ON recursive_tasks.parent = task_table.taskId
+        WHERE task_table.deleted = 0
+    )
+    SELECT task
+    FROM recursive_tasks
+    """)
     abstract suspend fun getParents(parent: Long): List<Long>
-
     suspend fun getChildren(id: Long): List<Long> = getChildren(listOf(id))
     @Query("""
-WITH RECURSIVE recursive_tasks (task) AS (
-    SELECT taskId
-    FROM task_table
-    WHERE parent_task_id IN (:ids)
-    UNION ALL
-    SELECT taskId
-    FROM task_table
-             INNER JOIN recursive_tasks ON recursive_tasks.task = task_table.parent_task_id
-    )
-SELECT task
-FROM recursive_tasks
-    """)
+    WITH RECURSIVE recursive_tasks (task) AS (
+        SELECT taskId
+        FROM task_table
+        WHERE parent_task_id IN (:ids)
+        UNION ALL
+        SELECT taskId
+        FROM task_table
+                 INNER JOIN recursive_tasks ON recursive_tasks.task = task_table.parent_task_id
+        )
+    SELECT task
+    FROM recursive_tasks
+        """)
     abstract suspend fun getChildren(ids: List<Long>): List<Long>
 
     @Query("SELECT * FROM task_table WHERE taskId IN (:ids)")

@@ -1,14 +1,9 @@
 package com.example.mytask.service
 
-import android.app.NotificationManager
-import android.content.Context
-import android.media.RingtoneManager
 import com.example.mytask.LocalBroadcastManager
 import com.example.mytask.database.Task
 import com.example.mytask.database.TaskDatabaseDao
-import com.example.mytask.jobs.WorkManager
 import com.example.mytask.now
-import dagger.hilt.android.qualifiers.ApplicationContext
 import timber.log.Timber
 import javax.inject.Inject
 

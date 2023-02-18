@@ -1,24 +1,14 @@
 package com.example.mytask.time
 
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.provider.SyncStateContract
-import android.service.autofill.Validators.and
-import androidx.core.app.NotificationCompat
-import androidx.room.Dao
 import com.example.mytask.DateUtilities
-import com.example.mytask.R
 import com.example.mytask.database.Task
 import com.example.mytask.database.TaskDatabaseDao
-import dagger.hilt.android.qualifiers.ApplicationContext
-import org.tasks.time.DateTimeUtils
-import javax.inject.Inject
+
 //@Inject constructor
 class TimerPlugin (
 //    @param:ApplicationContext private val context: Context,
 //    private val notificationManager: NotificationManager,
-     private val taskDao: TaskDatabaseDao) {
+    private val taskDao: TaskDatabaseDao) {
     suspend fun startTimer(task: Task?) {
         updateTimer(task, true)
     }
