@@ -2,6 +2,55 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.mytask">
+    <!-- ================================================== Used Permissions = -->
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <!-- ********************* -->
+    <!-- maps and place search -->
+    <!-- ********************* -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <!-- ************************ -->
+    <!-- location based reminders -->
+    <!-- ************************ -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false"/>
+
+    <!-- ************* -->
+    <!-- notifications -->
+    <!-- ************* -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!-- *************************** -->
+    <!-- google calendar integration -->
+    <!-- *************************** -->
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+
+    <!-- ****************** -->
+    <!-- creating shortcuts -->
+    <!-- ****************** -->
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+
+    <!-- ******************************************* -->
+    <!-- scheduling reminders after rebooting device -->
+    <!-- ******************************************* -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <!-- *********************************** -->
+    <!-- keep device awake for notifications -->
+    <!-- *********************************** -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
 
     <application
         android:name=".MyTasksApplication"
@@ -21,7 +70,6 @@
             android:theme="@style/Theme.MyTask.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

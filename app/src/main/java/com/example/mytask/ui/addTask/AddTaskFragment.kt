@@ -165,7 +165,7 @@ class AddTaskFragment : Fragment(){
 
     suspend fun stopTimer(): Task {
         val model = addTaskViewModel.task.value!!
-        timerPlugin.startTimer(model)
+        timerPlugin.stopTimer(model)
 //        addComment(String.format(
 //            "%s %s",
 //            getString(R.string.TEA_timer_comment_started),

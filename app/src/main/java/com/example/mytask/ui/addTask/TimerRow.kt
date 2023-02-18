@@ -59,7 +59,7 @@ fun TimerRow(
                 elapsedString != null -> elapsedString
                 else -> null
             }
-            val playText = "00:00"
+//            val playText = "00:00"
             Row {
                 if (text == null) {
                     DisabledText(
@@ -83,7 +83,7 @@ fun TimerRow(
                     },
                     modifier = Modifier.padding(vertical = 12.dp),
                 ) {
-                    Column() {
+//                    Column() {
                         Icon(
                             imageVector = if (started > 0) {
                                 Icons.Outlined.Pause
@@ -93,8 +93,8 @@ fun TimerRow(
                             modifier = Modifier.alpha(ContentAlpha.medium),
                             contentDescription = null
                         )
-                        Text(text = playText)
-                    }
+//                        Text(text = playText)
+//                    }
 
                 }
             }

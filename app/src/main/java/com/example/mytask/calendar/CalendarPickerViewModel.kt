@@ -1,5 +1,7 @@
 package com.example.mytask.calendar
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.M)
 @HiltViewModel
 class CalendarPickerViewModel @Inject constructor(
     private val calendarProvider: CalendarProvider
@@ -24,6 +27,7 @@ class CalendarPickerViewModel @Inject constructor(
     val viewState: StateFlow<ViewState>
         get() = _viewState.asStateFlow()
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun loadCalendars() {
         viewModelScope.launch(Dispatchers.IO) {
             _viewState.update { it.copy(calendars = calendarProvider.calendars) }

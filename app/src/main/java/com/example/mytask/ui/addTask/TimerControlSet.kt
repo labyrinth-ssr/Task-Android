@@ -22,7 +22,6 @@ class TimerControlSet : TaskEditControlFragment() {
     @Inject lateinit var activity: Activity
 //    @Inject lateinit var dialogBuilder: DialogBuilder
 //    @Inject lateinit var theme: Resources.Theme
-
 //    private lateinit var estimated: TimeDurationControlSet
 //    private lateinit var elapsed: TimeDurationControlSet
 //    private var dialog: AlertDialog? = null
