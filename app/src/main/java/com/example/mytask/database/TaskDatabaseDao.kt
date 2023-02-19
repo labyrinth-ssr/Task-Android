@@ -22,6 +22,8 @@ interface TaskDatabaseDao {
     suspend fun get(key:Long):Task?
     @Query("DELETE FROM task_table")
     suspend fun clear()
+    @Query("DELETE FROM task_table where taskId = :key")
+    suspend fun delete(key: Long)
     @Query("SELECT * FROM task_table ORDER BY taskId DESC")
     suspend fun getDueTodayTask(): Task?
     @Query("SELECT * FROM task_table ORDER BY taskId DESC")

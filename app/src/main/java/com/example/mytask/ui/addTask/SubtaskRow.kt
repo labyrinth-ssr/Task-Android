@@ -66,7 +66,7 @@ fun SubtaskRow(
                             task = task,
                             indent = task.level,
                             onRowClick = { openSubtask(task.task) },
-                            onCompleteClick = { completeExistingSubtask(task.task, !task.isChecked) },
+                            onCompleteClick = { completeExistingSubtask(task.task, !task.task.isCompleted) },
                             onToggleSubtaskClick = { toggleSubtask(task.id.toLong(), !task.isExpand) }
                         )
                     }
@@ -188,13 +188,6 @@ fun ExistingSubtaskRow(
                 textDecoration = if (task.isChecked) TextDecoration.LineThrough else TextDecoration.None
             )
         )
-//        if (task.hasChildren()) {
-//            SubtaskChip(
-//                task = task,
-//                compact = true,
-//                onClick = onToggleSubtaskClick,
-//            )
-//        }
     }
 }
 
@@ -281,9 +274,6 @@ fun CheckBox(
 fun NoSubtasks() {
     MdcTheme {
         SubtaskRow(
-//            filter = null,
-//            googleTask = null,
-//            desaturate = true,
             existingSubtasks = emptyList(),
             newSubtasks = emptyList(),
             openSubtask = {},
@@ -301,9 +291,6 @@ fun NoSubtasks() {
 fun SubtasksPreview() {
     MdcTheme {
         SubtaskRow(
-//            filter = null,
-//            googleTask = null,
-//            desaturate = true,
             existingSubtasks = listOf(
                 Node().apply {
                     task = Task().apply {
@@ -338,99 +325,3 @@ fun SubtasksPreview() {
     }
 }
 
-//@Composable
-//fun SubtaskChip(
-//    task: TaskContainer,
-//    compact: Boolean,
-//    onClick: () -> Unit,
-//) {
-//    val context = LocalContext.current
-//    Chip(
-//        icon = if (task.isCollapsed)
-//            R.drawable.ic_keyboard_arrow_down_black_24dp
-//        else
-//            R.drawable.ic_keyboard_arrow_up_black_24dp,
-//        name = if (compact)
-//            NumberFormat.getInstance().format(task.children)
-//        else
-//            context.resources.getQuantityString(R.plurals.subtask_count, task.children, task.children),
-//        theme = 0,
-//        showText = true,
-//        showIcon = true,
-//        onClick = onClick,
-//        colorProvider = { context.getColor(R.color.default_chip_background) },
-//    )
-//}
-//
-//@Composable
-//fun Chip(
-//    @DrawableRes icon: Int?,
-//    name: String?,
-//    theme: Int,
-//    showText: Boolean,
-//    showIcon: Boolean,
-//    onClick: () -> Unit,
-//    colorProvider: (Int) -> Int,
-//    clear: (() -> Unit)? = null,
-//) {
-//    Chip(
-//        color = Color(colorProvider(theme)),
-//        text = if (showText) name else null,
-//        icon = if (showIcon && icon != null) icon else null,
-//        onClick = onClick,
-//        clear = clear,
-//    )
-//}
-//
-//@Composable
-//fun Chip(
-//    text: String? = null,
-//    icon: Int? = null,
-//    color: Color,
-//    onClick: () -> Unit = {},
-//    clear: (() -> Unit)? = null,
-//) {
-//    CompositionLocalProvider(
-//        LocalMinimumTouchTargetEnforcement provides false
-//    ) {
-//        FilterChip(
-//            selected = false,
-//            onClick = onClick,
-//            border = BorderStroke(1.dp, color = color),
-//            leadingIcon = {
-//                if (text != null) {
-//                    ChipIcon(iconRes = icon)
-//                }
-//            },
-//            trailingIcon = {
-//                clear?.let { onClearClick ->
-//                    Icon(
-//                        imageVector = Icons.Outlined.Cancel,
-//                        modifier = Modifier
-//                            .size(16.dp)
-//                            .alpha(ContentAlpha.medium)
-//                            .clickable { onClearClick() },
-//                        contentDescription = stringResource(id = androidx.compose.material.R.string.delete),
-//                    )
-//                }
-//            },
-//            modifier = Modifier.defaultMinSize(minHeight = 26.dp),
-//            colors = ChipDefaults.outlinedFilterChipColors(
-//                backgroundColor = color.copy(alpha = .1f),
-//                contentColor = MaterialTheme.colors.onSurface
-//            ),
-//        ) {
-//            if (text == null) {
-//                ChipIcon(iconRes = icon)
-//            }
-//            text?.let {
-//                Text(
-//                    text = it,
-//                    style = MaterialTheme.typography.caption,
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis,
-//                )
-//            }
-//        }
-//    }
-//}

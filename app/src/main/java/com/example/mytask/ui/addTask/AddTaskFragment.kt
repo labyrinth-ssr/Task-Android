@@ -31,6 +31,7 @@ import com.example.mytask.databinding.FragmentAddTaskBinding
 import com.example.mytask.databinding.TaskEditCalendarBinding
 import com.example.mytask.databinding.TaskEditSubtasksBinding
 import com.example.mytask.databinding.TaskEditTimerBinding
+import com.example.mytask.service.TaskCompleter
 import com.example.mytask.time.TimerPlugin
 import com.google.android.material.composethemeadapter.MdcTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,39 +39,16 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class AddTaskFragment : Fragment(){
-
     lateinit var timerPlugin: TimerPlugin
+    lateinit var taskCompleter:TaskCompleter
     @Inject lateinit var context: Activity
     @Inject lateinit var permissionChecker: PermissionChecker
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-
     lateinit var binding:FragmentAddTaskBinding;
     lateinit var addTaskViewModel: AddTaskViewModel;
 
-    fun insertCalendar(){
-        val startMillis: Long = Calendar.getInstance().run {
-            set(2023, 1, 18, 7, 30)
-            timeInMillis
-        }
-        val endMillis: Long = Calendar.getInstance().run {
-            set(2023, 1, 18, 8, 30)
-            timeInMillis
-        }
-        val intent = Intent(Intent.ACTION_INSERT)
-            .setData(CalendarContract.Events.CONTENT_URI)
-            .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
-            .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis)
-            .putExtra(CalendarContract.Events.TITLE, "Yoga")
-            .putExtra(CalendarContract.Events.DESCRIPTION, "Group class")
-            .putExtra(CalendarContract.Events.EVENT_LOCATION, "The gym")
-            .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY)
-//            .putExtra(Intent.EXTRA_EMAIL, "rowan@example.com,trevor@example.com")
-//        startActivity(intent)
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,14 +60,16 @@ class AddTaskFragment : Fragment(){
         val dataSource = TaskDatabase.getInstance(application).taskDatabaseDao
         val viewModelFactory = AddTaskViewModelFactory(arguments.taskKey,dataSource, permissionChecker)
         timerPlugin = TimerPlugin(dataSource)
+        taskCompleter = TaskCompleter(dataSource)
         addTaskViewModel =
             ViewModelProvider(this,viewModelFactory).get(AddTaskViewModel::class.java)
+        addTaskViewModel.taskCompleter = taskCompleter
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_add_task,container,false)
         binding.lifecycleOwner = this
         addTaskViewModel.navigateToHome.observe(viewLifecycleOwner, Observer{
             Timber.i("add navigate to home?"+it)
             if (it==true){
-                insertCalendar()
+                startActivity(addTaskViewModel.intent)
                 this.findNavController().navigate(AddTaskFragmentDirections.actionAddTaskToNavHome())
                 addTaskViewModel.doneNavigating()
             }
@@ -135,8 +115,7 @@ class AddTaskFragment : Fragment(){
 
         datePickerListener()
 
-
-        binding.composeView.setContent { 
+        binding.composeView.setContent {
             MdcTheme {
                 Column {
                     AndroidViewBinding(TaskEditSubtasksBinding::inflate)

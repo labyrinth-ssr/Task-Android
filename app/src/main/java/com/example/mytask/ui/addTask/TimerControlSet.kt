@@ -20,20 +20,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TimerControlSet : TaskEditControlFragment() {
     @Inject lateinit var activity: Activity
-//    @Inject lateinit var dialogBuilder: DialogBuilder
-//    @Inject lateinit var theme: Resources.Theme
-//    private lateinit var estimated: TimeDurationControlSet
-//    private lateinit var elapsed: TimeDurationControlSet
-//    private var dialog: AlertDialog? = null
-//    private lateinit var dialogView: View
     private lateinit var callback: TimerControlSetCallback
 
     override fun createView(savedInstanceState: Bundle?) {
-//        dialogView = activity.layoutInflater.inflate(R.layout.control_set_timers_dialog, null)
-//        estimated = TimeDurationControlSet(activity, dialogView, R.id.estimatedDuration, theme)
-//        elapsed = TimeDurationControlSet(activity, dialogView, R.id.elapsedDuration, theme)
-//        estimated.setTimeDuration(viewModel.estimatedSeconds.value)
-//        elapsed.setTimeDuration(viewModel.elapsedSeconds.value)
     }
 
     override fun onAttach(activity: Activity) {
@@ -42,30 +31,13 @@ class TimerControlSet : TaskEditControlFragment() {
     }
 
     private fun onRowClick() {
-//        if (dialog == null) {
-//            dialog = buildDialog()
-//        }
-//        dialog!!.show()
     }
-
-//    private fun buildDialog(): AlertDialog {
-//        return dialogBuilder
-//            .newDialog()
-//            .setView(dialogView)
-//            .setPositiveButton(R.string.ok) { _, _ ->
-//                viewModel.estimatedSeconds.value = estimated.timeDurationInSeconds
-//                viewModel.elapsedSeconds.value = elapsed.timeDurationInSeconds
-//            }
-//            .setOnCancelListener {}
-//            .create()
-//    }
 
     private fun timerClicked() {
         lifecycleScope.launch {
             if (timerActive()) {
                 val task = callback.stopTimer()
                 viewModel.elapsedSeconds.value = task.elapsedSeconds
-//                elapsed.setTimeDuration(task.elapsedSeconds)
                 viewModel.timerStarted.value = 0
             } else {
                 val task = callback.startTimer()

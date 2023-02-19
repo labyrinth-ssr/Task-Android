@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mytask.R
 import com.example.mytask.database.TaskDatabase
 import com.example.mytask.databinding.FragmentHomeBinding
+import com.example.mytask.service.TaskCompleter
 import com.example.mytask.tasksToNodes
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -44,24 +45,24 @@ class HomeFragment : Fragment(){
         val application = requireNotNull(this.activity).application
         val dataSource = TaskDatabase.getInstance(application).taskDatabaseDao
         val viewModelFactory = HomeViewModelFactory(dataSource, application)
+        val taskCompleter = TaskCompleter(dataSource)
         homeViewModel =
             ViewModelProvider(this,viewModelFactory)[HomeViewModel::class.java]
+        homeViewModel.taskCompleter = taskCompleter
         binding.lifecycleOwner = this
         binding.homeViewModel = homeViewModel
         adapter = TaskAdapter(TaskListener { task ->
             homeViewModel.onTaskClicked(task)
         })
+        adapter.viewModel = homeViewModel
         binding.taskList.layoutManager = LinearLayoutManager(activity)
         binding.taskList.adapter = adapter
-
-//        val checkBox = binding.
 
         adapter.mNodesLive.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
         })
 
         homeViewModel.navigateToAddTask.observe(viewLifecycleOwner, Observer {
-
             task->
             task?.let {
                 Timber.i("home navigate to add?"+it.taskName)

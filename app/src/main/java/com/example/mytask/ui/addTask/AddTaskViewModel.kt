@@ -16,11 +16,13 @@ import com.example.mytask.calendar.PermissionChecker
 import com.example.mytask.database.Task
 import com.example.mytask.database.TaskDatabaseDao
 import com.example.mytask.dateStr2timeStamp
+import com.example.mytask.service.TaskCompleter
 import com.example.mytask.tasksToNodes
 import com.example.mytask.ui.home.Node
 import com.example.mytask.ui.home.TreeHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.security.AccessController.getContext
 import java.util.*
 import java.util.Collections.addAll
@@ -30,13 +32,15 @@ import kotlin.collections.ArrayList
 class AddTaskViewModel (
     private val taskKey: Long = 0L,
     private val permissionChecker: PermissionChecker,
-    val database: TaskDatabaseDao) : ViewModel(), Observer<List<Node>> {
-
+    val database: TaskDatabaseDao ) : ViewModel(), Observer<List<Node>> {
+    lateinit var taskCompleter: TaskCompleter
     val task = MutableLiveData<Task>()
     val subtasks = MutableLiveData<List<Node>?>()
     var newSubtasks = MutableStateFlow(emptyList<Task>())
-    val timerStarted = MutableStateFlow(task.value?.timerStart)
-    val elapsedSeconds = MutableStateFlow(task.value?.elapsedSeconds)
+    var timerStarted = MutableStateFlow(0L)
+    var elapsedSeconds = MutableStateFlow(0)
+    var intent = Intent()
+
     var eventUri = MutableStateFlow(task.value?.calendarURI)
     val isNew = taskKey == 0L
     @RequiresApi(Build.VERSION_CODES.M)
@@ -48,6 +52,24 @@ class AddTaskViewModel (
     @RequiresApi(Build.VERSION_CODES.M)
     var selectedCalendar = MutableStateFlow(originalCalendar)
 
+    fun insertCalendar(){
+        intent = task.value?.let {
+            Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, it.startTimeStamp)
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, it.dueTimeStamp)
+                .putExtra(CalendarContract.Events.TITLE, it.taskName)
+    //                .putExtra(CalendarContract.Events.DESCRIPTION, "Group class")
+    //                .putExtra(CalendarContract.Events.EVENT_LOCATION, "The gym")
+                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY)
+        }!!
+    }
+
+    suspend fun setComplete(task1: Task,completed:Boolean){
+        taskCompleter.setComplete(task1, completed)
+        subtasks.value = taskKeyToNode(taskKey)
+        task.value = database.get(taskKey)
+    }
 
     suspend fun taskKeyToNode(taskKey: Long) : MutableList<Node>{
         val taskList = ArrayList<Task>()
@@ -66,6 +88,8 @@ class AddTaskViewModel (
             viewModelScope.launch {
                 subtasks.value = taskKeyToNode(taskKey)
                 task.value = database.get(taskKey)
+                timerStarted = MutableStateFlow(task.value!!.timerStart)
+                elapsedSeconds = MutableStateFlow(task.value!!.elapsedSeconds)
                 Log.i(TAG, "task init: "+ (task.value?.taskName)+"task id:"+taskKey)
             }
         }
@@ -84,10 +108,6 @@ class AddTaskViewModel (
         _navigateToHome.value = false
     }
 
-//    fun getTask(): Task? {
-//        return task.value;
-//    }
-
     fun setTaskName(taskName:String){
         task.value?.taskName = taskName
     }
@@ -100,12 +120,15 @@ class AddTaskViewModel (
         task.value?.dueTimeStamp = dateStr2timeStamp(dateStr)
     }
 
-
-
+    @RequiresApi(Build.VERSION_CODES.M)
     fun onAddTask(){
         viewModelScope.launch {
             Log.i(TAG, "onAddTask: $task")
             task.value?.let {
+                Timber.i("selected calendar:"+selectedCalendar)
+                if (selectedCalendar != null){
+//                    it.calendarURI =
+                }
                 if (it.taskId == 0L)
                     insert(it)
                 else
@@ -119,12 +142,15 @@ class AddTaskViewModel (
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
+    fun onDeleteTask(){
+        viewModelScope.launch {
+            task.value?.let { taskCompleter.delete(it) }
+            _navigateToHome.value = true
+        }
     }
 
-    fun setDate(date:String){
-        dateString.value = date
+    override fun onCleared() {
+        super.onCleared()
     }
 
     private suspend fun insert(newTask: Task) {

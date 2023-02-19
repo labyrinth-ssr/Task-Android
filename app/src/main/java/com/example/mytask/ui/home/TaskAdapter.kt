@@ -19,6 +19,7 @@ class TaskAdapter(val clickListener: TaskListener) : ListAdapter<Node,RecyclerVi
      * 存储所有可见的Node
      */
     var mNodesLive: MutableLiveData<MutableList<Node>> = MutableLiveData()
+    lateinit var viewModel: HomeViewModel
 
 //    var nodeList:MutableList<Node> = ArrayList<Node>()
     lateinit var mAllNodes: MutableList<Node>
@@ -81,12 +82,13 @@ class TaskAdapter(val clickListener: TaskListener) : ListAdapter<Node,RecyclerVi
             innerViewHolder.icon.visibility = View.GONE
         }
 
-        innerViewHolder.checkBox.isChecked = mNodes[position].isChecked
+//        innerViewHolder.checkBox.isChecked = mNodes[position].isChecked
         innerViewHolder.name.text = mNodes[position].name
 
         innerViewHolder.checkBox.setOnClickListener {
             val isChecked = !mNodes[position].isChecked
             TreeHelper.setNodeChecked(mNodes[position], isChecked)
+            viewModel.setComplete(mNodes[position].task,isChecked)
             notifyDataSetChanged()
         }
 

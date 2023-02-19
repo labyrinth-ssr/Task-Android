@@ -1,5 +1,6 @@
 package com.example.mytask.database
 
+import android.renderscript.RenderScript
 import androidx.annotation.IntDef
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -34,7 +35,9 @@ class Task{
     @ColumnInfo(name = "calendarUri")
     var calendarURI: String? = null
 
-    var isCompleted:Boolean = false
+    val isCompleted
+        get() = completionDate > 0
+
     var isRecurring:Boolean = false
 
     @IntDef(Priority.HIGH, Priority.MEDIUM, Priority.LOW, Priority.NONE)

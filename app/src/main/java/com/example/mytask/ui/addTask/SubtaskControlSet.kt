@@ -19,21 +19,12 @@ import com.example.mytask.ui.MainActivityEventBus
 import com.example.mytask.ui.home.Node
 import com.example.mytask.ui.home.TreeHelper
 import com.google.android.material.composethemeadapter.MdcTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SubtaskControlSet: TaskEditControlFragment() {
-//    @Inject lateinit var activity: Activity
     @Inject lateinit var taskCompleter: TaskCompleter
-//    @Inject lateinit var googleTaskDao: GoogleTaskDao
-//    @Inject lateinit var taskCreator: TaskCreator
-    @Inject lateinit var taskDao: TaskDatabaseDao
-    @Inject lateinit var checkBoxProvider: CheckBoxProvider
-//    @Inject lateinit var chipProvider: ChipProvider
-    @Inject lateinit var eventBus: MainActivityEventBus
-    @Inject lateinit var colorProvider: ColorProvider
-//    @Inject lateinit var preferences: Preferences
-//    lateinit var listViewModel: TaskListViewModel
     override fun createView(savedInstanceState: Bundle?) {
 //        viewModel.task.takeIf { it.id > 0 }?.let {
 //            listViewModel.setFilter(Filter("subtasks", getQueryTemplate(it)))
@@ -78,7 +69,7 @@ class SubtaskControlSet: TaskEditControlFragment() {
 //    }
 //
     private fun openSubtask(task: Task) = lifecycleScope.launch {
-        eventBus.emit(MainActivityEvent.OpenTask(task))
+//        eventBus.emit(MainActivityEvent.OpenTask(task))
     }
 
     private fun addSubtask() = lifecycleScope.launch {
@@ -93,7 +84,7 @@ class SubtaskControlSet: TaskEditControlFragment() {
 //        taskCompleter.setComplete(task, completed)
 //    }
     private fun complete(task: Task, completed: Boolean) = lifecycleScope.launch {
-        taskCompleter.setComplete(task, completed)
+        viewModel.setComplete(task,completed)
     }
 
     companion object {

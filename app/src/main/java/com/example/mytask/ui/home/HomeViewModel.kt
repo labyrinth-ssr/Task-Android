@@ -7,6 +7,7 @@ import androidx.lifecycle.*
 import com.example.mytask.database.Task
 import com.example.mytask.database.TaskDatabaseDao
 import com.example.mytask.formatTasks
+import com.example.mytask.service.TaskCompleter
 import kotlinx.coroutines.launch
 
 class HomeViewModel (
@@ -14,13 +15,9 @@ class HomeViewModel (
     application: Application
         ):AndroidViewModel(application){
     var tasks = database.getAllTasks()
-    val tasksString = Transformations.map(tasks) {tasks->
-        formatTasks(tasks)
-    }
-
     private var todayTask = MutableLiveData<Task?>()
     private val _navigateToAddTask = MutableLiveData<Task?>()
-
+    lateinit var taskCompleter: TaskCompleter
 
     val navigateToAddTask: MutableLiveData<Task?>
         get() = _navigateToAddTask
@@ -29,15 +26,15 @@ class HomeViewModel (
         _navigateToAddTask.value = null
     }
 
+    fun setComplete(task1: Task,completed:Boolean){
+        viewModelScope.launch {
+            taskCompleter.setComplete(task1, completed)
+        }
+    }
+
     init {
         initializeTodayTask()
         tasks = database.getAllTasks()
-        database.getAllTasks().map { it ->
-            it.forEach{
-                Log.i(TAG, "it: "+it.taskName)
-            }
-            Log.i(TAG, "for test: ")
-        }
     }
 
     private fun initializeTodayTask() {
@@ -45,6 +42,7 @@ class HomeViewModel (
             todayTask.value = getTodayTaskFromDatabase()
         }
     }
+
     private suspend fun getTodayTaskFromDatabase(): Task? {
         var task = database.getDueTodayTask()
         return task;
@@ -59,19 +57,8 @@ class HomeViewModel (
         _navigateToAddTask.value = task
     }
 
-//    fun onAddTask(){
-////        Log.i(TAG, "onAddTask: tasks:"+ (tasks.value?.get(0)?.taskName ?: ""))
-//        viewModelScope.launch {
-//            val newTask = Task()
-//            insert(newTask)
-//            todayTask.value = getTodayTaskFromDatabase()
-//            _navigateToAddTask.value = newTask
-//        }
-//        Log.i(TAG, "onAddTask:"+ tasksString.value)
-//    }
-//
-//    private suspend fun insert(newTask: Task) {
-//        database.insert(newTask)
+//    fun taskCompleted(task: Task){
+//        database.
 //    }
 
 }

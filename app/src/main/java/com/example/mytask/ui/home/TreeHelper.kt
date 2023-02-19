@@ -1,5 +1,8 @@
 package com.example.mytask.ui.home
 
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mytask.now
+import kotlinx.coroutines.coroutineScope
 import timber.log.Timber
 
 object TreeHelper {
@@ -84,7 +87,9 @@ object TreeHelper {
     fun setNodeChecked(node: Node, isChecked: Boolean) {
         // 自己设置是否选择
         node.isChecked = isChecked
-        node.task.isCompleted = isChecked
+
+
+//        node.task.completionDate = now()
         /**
          * 非叶子节点,子节点处理
          */
@@ -98,7 +103,7 @@ object TreeHelper {
      */
     private fun setChildrenNodeChecked(node: Node, isChecked: Boolean) {
         node.isChecked = isChecked
-        node.task.isCompleted = isChecked
+//        node.task.completionDate = now()
         if (!node.isLeaf) {
             for (n in node.childrenNodes) {
                 // 所有子节点设置是否选择

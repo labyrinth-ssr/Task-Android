@@ -26,6 +26,7 @@ fun CheckBox.setCheckBoxDisplay(item: Node?){
 //    }
     item.let {
         if (item != null) {
+            isChecked = item.task.isCompleted
             buttonTintList = ColorStateList.valueOf(ColorProvider.priorityColor(item.task.priority,false,true))
         };//setButtonTintList is accessible directly on API>19
     }

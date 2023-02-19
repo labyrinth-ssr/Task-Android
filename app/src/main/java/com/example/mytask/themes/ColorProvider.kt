@@ -9,8 +9,8 @@ import java.util.prefs.Preferences
 import javax.inject.Inject
 
 class ColorProvider @Inject constructor(
-    @param:ApplicationContext private val context: Context,
-    preferences: Preferences
+    @param:ApplicationContext private val context: Context
+//    preferences: Preferences
 ) {
 
     companion object {

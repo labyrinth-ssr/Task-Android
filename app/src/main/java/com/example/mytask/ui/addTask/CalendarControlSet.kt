@@ -34,7 +34,6 @@ class CalendarControlSet : TaskEditControlFragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
-
         val canAccessCalendars = permissionChecker.canAccessCalendars()
         viewModel.eventUri.value?.let {
             if (canAccessCalendars && !calendarEntryExists(it)) {
