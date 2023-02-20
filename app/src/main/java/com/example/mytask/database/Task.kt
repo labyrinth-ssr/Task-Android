@@ -17,7 +17,7 @@ class Task{
     @ColumnInfo(name = "start_time_milli")
     var startTimeStamp: Long = System.currentTimeMillis()
     @ColumnInfo(name = "end_time_milli")
-    var dueTimeStamp: Long = startTimeStamp
+    var dueTimeStamp: Long = 0L
     @ColumnInfo(name = "priority")
     var priority: Int = Priority.LOW
     /** Unixtime Task was completed. 0 means active  */
@@ -37,6 +37,8 @@ class Task{
 
     val isCompleted
         get() = completionDate > 0
+    /** Checks whether task is done. Requires DUE_DATE  */
+    fun hasDueDate() = dueTimeStamp > 0
 
     var isRecurring:Boolean = false
 

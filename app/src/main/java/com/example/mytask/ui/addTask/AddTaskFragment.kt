@@ -48,8 +48,6 @@ class AddTaskFragment : Fragment(){
     lateinit var binding:FragmentAddTaskBinding;
     lateinit var addTaskViewModel: AddTaskViewModel;
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,17 +57,19 @@ class AddTaskFragment : Fragment(){
         val arguments = AddTaskFragmentArgs.fromBundle(requireArguments())
         val dataSource = TaskDatabase.getInstance(application).taskDatabaseDao
         val viewModelFactory = AddTaskViewModelFactory(arguments.taskKey,dataSource, permissionChecker)
+        val cr = requireContext().contentResolver
         timerPlugin = TimerPlugin(dataSource)
         taskCompleter = TaskCompleter(dataSource)
         addTaskViewModel =
             ViewModelProvider(this,viewModelFactory).get(AddTaskViewModel::class.java)
         addTaskViewModel.taskCompleter = taskCompleter
+        addTaskViewModel.contentResolver = cr!!
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_add_task,container,false)
         binding.lifecycleOwner = this
         addTaskViewModel.navigateToHome.observe(viewLifecycleOwner, Observer{
             Timber.i("add navigate to home?"+it)
             if (it==true){
-                startActivity(addTaskViewModel.intent)
+//                startActivity(addTaskViewModel.intent)
                 this.findNavController().navigate(AddTaskFragmentDirections.actionAddTaskToNavHome())
                 addTaskViewModel.doneNavigating()
             }

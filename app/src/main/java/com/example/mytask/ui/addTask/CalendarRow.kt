@@ -86,6 +86,6 @@ fun NewCalendar() {
 @Composable
 fun ExistingCalendar() {
     MdcTheme {
-        CalendarRow(eventUri = "abcd", selectedCalendar = null, onClick = {}, clear = {})
+        CalendarRow(eventUri = "abcd", selectedCalendar = "Personal", onClick = {}, clear = {})
     }
 }
